@@ -9,9 +9,13 @@ class PracticeController extends Controller
   // 04 データベースからの情報を取得する
   public function getPractice() {
     // データベースから全件取得
-    $practice = Practice::all();
+    // $practice = Practice::all();
     // jsonとして返す
-    return response()->json($practice);
+    // return response()->json($practice);
+
+    // 05 jsonだと見にくいためHTMLに整形して表示させる
+    $practices = Practice::all();
+    return view('getPractice', ['practices' => $practices]);
   }
 
 
