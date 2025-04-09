@@ -2,8 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Practice;
+
 class PracticeController extends Controller
 {
+  // 04 データベースからの情報を取得する
+  public function getPractice() {
+    // データベースから全件取得
+    $practice = Practice::all();
+    // jsonとして返す
+    return response()->json($practice);
+  }
+
+
   // 03 HTMLを返すように変更
   public function sample() {
     return view('practice');

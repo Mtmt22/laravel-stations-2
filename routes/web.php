@@ -19,6 +19,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 04 データベースの取得
+Route::get('/getPractice', [PracticeController::class, 'getPractice']);
+
+
+// 02 RouteとControllerをどちらも使ってみよう
+// Route::get('URL', [Controllerの名前::class, 'Controller内のfunction名']);
+Route::get('/practice', [PracticeController::class, 'sample']);
+Route::get('/practice2', [PracticeController::class, 'sample2']);
+Route::get('/practice3', [PracticeController::class, 'sample3']);
+
+
 // 01:LaravelでRouteを使ってページを追加しよう
 // 「/practice3」にアクセスすると「test」という文字列が返ってくるページ作成
 // Route::get('/practice3', function () {
@@ -35,10 +46,3 @@ Route::get('/', function () {
 //   $name = 'practice2';
 //   return $name;
 // });
-
-
-// 02 RouteとControllerをどちらも使ってみよう
-// Route::get('URL', [Controllerの名前::class, 'Controller内のfunction名']);
-Route::get('/practice', [PracticeController::class, 'sample']);
-Route::get('/practice2', [PracticeController::class, 'sample2']);
-Route::get('/practice3', [PracticeController::class, 'sample3']);
