@@ -3,6 +3,7 @@
 use Database\Factories\PracticeFactory;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PracticeController;
+use App\Http\Controllers\MovieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,10 @@ use App\Http\Controllers\PracticeController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// 06 「GET /movies」で映画一覧のページをHTMLで返す
+Route::get('/movies', [MovieController::class, 'getMovie']);
+
 
 // 04 データベースの取得
 Route::get('/getPractice', [PracticeController::class, 'getPractice']);
