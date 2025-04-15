@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id()->comment('ID');
             $table->text('title')->comment('映画タイトル');
             $table->text('image_url')->comment('画像URL');
+            $table->integer('published_year')->comment('公開年');
+            // int, tinyintは使えない Laravelドキュメント参照
+            $table->boolean('is_showing')->default(false)->comment('上映中かどうか');
+            $table->text('description')->comment('概要');
             $table->timestamps();
         });
     }

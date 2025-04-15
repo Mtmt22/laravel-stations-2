@@ -20,6 +20,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 08 映画作品リストへの登録画面の作成
+Route::get('/admin/movies/create', [MovieController::class, 'getMovieCreate'])->name('movies.create');
+// 名前付きルート（name()）があるとURLが変わっても対応しやすい。
+// 08 映画作品の登録処理
+Route::post('/admin/movies/store', [MovieController::class, 'postMovieCreate'])->name('movies.store');
+
+
+// 07 「GET admin/movies」で現在登録されているmoviesの内容を全て出力する
+Route::get('admin/movies', [MovieController::class, 'getMovie'])->name('movies.movie');
+
+
 // 06 「GET /movies」で映画一覧のページをHTMLで返す
 Route::get('/movies', [MovieController::class, 'getMovie']);
 
