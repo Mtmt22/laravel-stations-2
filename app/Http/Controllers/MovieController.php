@@ -23,18 +23,27 @@ class MovieController extends Controller
   public function postMovieCreate(Request $request) {
     // <input name="title'...> で指定された内容を取得する
     $title = $request->input('title');
-    $description = $request->input('description');
     $image_url = $request->input('image_url');
     $published_year = $request->input('published_year');
     $is_showing = $request->boolean('is_showing');
+    $description = $request->input('description');
 
     // 入力内容を検証（バリデーション）する → 空だった場合にエラー
+    // booleanはエラーになるから削除した
     $validated = $request->validate([
-      // title は入力必須
-      'title' => 'required',
-      'description' => 'required',
-      'image_url' => 'required',
+      // 入力必須,titleは重複禁止
+      'title' => 'required|unique:movies,title',
+      'image_url' => 'required|active_url',
       'published_year' => 'required',
+      'description' => 'required',
+      'is_showing' => 'required|boolean'
+    ],[
+      'title.required' => 'タイトルは必須です',
+      'title.unique' => 'タイトルはすでに存在します',
+      'image_url.required' => '画像URLは必須です',
+      'image_url.active_url' => '画像URLは正しい形式ではありません',
+      'published_year.required' => '公開年は必須です',
+      'description.required' => '概要は必須です',
     ]);
 
     // 精査済みのデータを利用する
@@ -42,6 +51,7 @@ class MovieController extends Controller
     $description = $validated['description'];
     $image_url = $validated['image_url'];
     $published_year = $validated['published_year'];
+    $is_showing = $validated['is_showing'];
 
     // 新しい Diary モデルインスタンスを作成
     $movie = new Movie();
@@ -59,7 +69,7 @@ class MovieController extends Controller
     // 保存後にリダイレクトする（例：新規映画登録ページへ）
     // return back()->with('message', '保存しました');
     // 映画一覧にリダイレクトする
-    return redirect()->route('movies.movie')->with('message', '保存しました');
+    return redirect()->route('movies.movie')->with('message', '登録しました');
   }
 
 

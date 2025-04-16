@@ -24,21 +24,14 @@
             <td>{{ $movie->image_url }}</td>
             <td>{{ $movie->published_year }}</td>
             <td>{{ $movie->is_showing ? '上映中' : '上映予定' }}</td>
-            <!-- <td> -->
-              <!-- もし「is_showing」がtrueのときは'上演中'、falseのときは'上演予定'と表示させる。 -->
-            <!-- <td>
-              @if ($movie->is_showing)
-                上演中
-              @else
-                上演予定
-              @endif
-            </td> -->
-              <!-- {{ $movie->is_showing }} /  -->
-            <!-- </td> -->
             <td>{{ $movie->description }}</td>
           </tr>
       @endforeach
     </tbody>
   </table>
+  <!-- メッセージの表示 -->
+  @if (session('message'))
+    <p style="color: green;">{{ session('message') }}</p>
+  @endif
 </body>
 </html>

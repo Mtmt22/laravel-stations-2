@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
+  <!-- バリデーションエラー
+  error変数の中にエラーメッセージがあるか? -->
+  @if ($errors->any())
+    <div class="alert alert-danger" style="color: red;">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+
   <form method="post" action="{{ route('movies.store') }}">
     @csrf
     <div>
@@ -21,7 +34,9 @@
 
     <div><!-- ありか無しかのon/offチェックボックス -->
       <label for="is_showing">公開中かどうか：</label>
-      <input type="checkbox" id="is_showing" name="is_showing">
+      <!-- チェックしないとis_showingが0を送信する -->
+      <input type="hidden" name="is_showing" value="0">
+      <input type="checkbox" id="is_showing" name="is_showing" value="1">
     </div>
 
     <div>
@@ -30,7 +45,7 @@
     </div>
 
     <div>
-      <button type="submit">保存</button>
+      <button type="submit">新規登録</button>
     </div>
   </form>
   <!-- メッセージの表示 -->
