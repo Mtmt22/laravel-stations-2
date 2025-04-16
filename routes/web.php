@@ -20,6 +20,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+// 06 「GET /movies」で映画一覧のページをHTMLで返す
+Route::get('/movies', [MovieController::class, 'getMovie']);
+
+
+// 07 「GET admin/movies」で現在登録されているmoviesの内容を全て出力する
+Route::get('admin/movies', [MovieController::class, 'getMovie'])->name('movies.movie');
+
+
 // 08 映画作品リストへの登録画面の作成
 Route::get('/admin/movies/create', [MovieController::class, 'getMovieCreate'])->name('movies.create');
 // 名前付きルート（name()）があるとURLが変わっても対応しやすい。
@@ -27,12 +36,14 @@ Route::get('/admin/movies/create', [MovieController::class, 'getMovieCreate'])->
 Route::post('/admin/movies/store', [MovieController::class, 'postMovieCreate'])->name('movies.store');
 
 
-// 07 「GET admin/movies」で現在登録されているmoviesの内容を全て出力する
-Route::get('admin/movies', [MovieController::class, 'getMovie'])->name('movies.movie');
+// 09 映画作品リストの編集画面の作成
+// 個別データの表示
+Route::get('/admin/movies/{id}/', [MovieController::class, 'showMovie'])->name('movies.show');
+// 編集画面
+Route::get('/admin/movies/{id}/edit/', [MovieController::class, 'editMovie'])->name('movies.edit');
+// 更新処理
+Route::patch('/admin/movies/{id}/', [MovieController::class, 'updateMovie'])->name('movies.update');
 
-
-// 06 「GET /movies」で映画一覧のページをHTMLで返す
-Route::get('/movies', [MovieController::class, 'getMovie']);
 
 
 // 04 データベースの取得
