@@ -118,5 +118,10 @@ class MovieController extends Controller
     return redirect()->route('movies.movie')->with('message', '更新しました');
   }
 
-
+  // 10 削除機能
+  public function deleteMovie(Request $request ,$id) {
+    $movie = Movie::findOrFail($id);
+    $movie->delete();
+    return redirect()->route('movies.movie')->with('message', '削除しました');
+  }
 }

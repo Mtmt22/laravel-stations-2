@@ -45,6 +45,12 @@ Route::get('/admin/movies/{id}/edit', [MovieController::class, 'editMovie'])->na
 Route::patch('/admin/movies/{id}/update', [MovieController::class, 'updateMovie'])->name('movies.update');
 
 
+// 10 削除処理
+Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'deleteMovie'])->name('movies.delete');
+
+
+
+
 
 // 04 データベースの取得
 Route::get('/getPractice', [PracticeController::class, 'getPractice']);

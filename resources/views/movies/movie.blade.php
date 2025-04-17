@@ -31,6 +31,15 @@
                 <button>編集</button>
               </a>
             </td>
+            <!-- 削除ボタン -->
+            <td>
+              <form method="post" action="{{ route('movies.delete', $movie) }}" >
+                @csrf
+                @method('delete')
+                <!-- 削除前に確認のダイアログ表示する -->
+                <button type="submit" onclick="window.confirm('削除しますか?')">削除</button>
+              </form>
+            </td>
         </tr>
       @endforeach
     </tbody>
