@@ -10,7 +10,14 @@
     <div>概要 : {{ $movie->description }}</div>
     <div>登録日時 : {{ $movie->created_at }}</div>
     <div>更新日時 : {{ $movie->updated_at }}</div>
-
   </div>
+
+    <!-- 編集画面へのリンク -->
+  <div>
+    <a href="{{ route('movies.edit', $movie) }}">
+      <button>編集</button>
+    </a>
+  </div>
+
 </body>
 </html>

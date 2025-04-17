@@ -38,11 +38,11 @@ Route::post('/admin/movies/store', [MovieController::class, 'postMovieCreate'])-
 
 // 09 映画作品リストの編集画面の作成
 // 個別データの表示
-Route::get('/admin/movies/{id}/', [MovieController::class, 'showMovie'])->name('movies.show');
+Route::get('/admin/movies/{id}', [MovieController::class, 'showMovie'])->name('movies.show');
 // 編集画面
-Route::get('/admin/movies/{id}/edit/', [MovieController::class, 'editMovie'])->name('movies.edit');
+Route::get('/admin/movies/{id}/edit', [MovieController::class, 'editMovie'])->name('movies.edit');
 // 更新処理
-Route::patch('/admin/movies/{id}/', [MovieController::class, 'updateMovie'])->name('movies.update');
+Route::patch('/admin/movies/{id}/update', [MovieController::class, 'updateMovie'])->name('movies.update');
 
 
 

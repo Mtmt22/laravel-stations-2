@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Practice</title>
+    <title>MoviesLisst</title>
 </head>
 <body>
   <table>
@@ -25,7 +25,13 @@
             <td>{{ $movie->published_year }}</td>
             <td>{{ $movie->is_showing ? '上映中' : '上映予定' }}</td>
             <td>{{ $movie->description }}</td>
-          </tr>
+            <!-- 編集画面へのリンク -->
+            <td>
+              <a href="{{ route('movies.edit', $movie) }}">
+                <button>編集</button>
+              </a>
+            </td>
+        </tr>
       @endforeach
     </tbody>
   </table>

@@ -78,6 +78,7 @@ class MovieController extends Controller
   // 09 個別データの表示処理
   public function showMovie($id) {
     // id を利用して、Movie モデルインスタンスを取得
+    $movie = Movie::find($id);
     // 存在しない場合に404を返す
     $movie = Movie::findOrfail($id);
     // 取得したデータをビューに渡す
@@ -86,13 +87,13 @@ class MovieController extends Controller
 
   // 09 編集画面への処理
   public function editMovie($id) {
-    $movie = Movie::findOrFail($id);
+    $movie = Movie::find($id);
     return view('movies.edit', compact('movie'));
   }
 
   // 09 更新処理
   public function updateMovie(Request $request, $id) {
-    $movie = Movie::findOrFail($id);
+    $movie = Movie::find($id);
     // 入力値チェック
     $validated = $request->validate([
       // 入力必須,titleは重複禁止,ただし自分自身のデータならOK（idを指定）
@@ -114,7 +115,7 @@ class MovieController extends Controller
     // チェック済みの値を用いて更新
     $movie->update($validated);
 
-    return redirect()->route('movies.movie', $id)->with('message', '更新しました');
+    return redirect()->route('movies.movie')->with('message', '更新しました');
   }
 
 
