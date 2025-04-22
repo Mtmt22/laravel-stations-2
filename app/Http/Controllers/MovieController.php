@@ -5,13 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Log;
 
 class MovieController extends Controller
 {
   public function getMovie() {
-    $movies = Movie::all();
+    // $movies = Movie::all();
+    // 20件ずつのページネーション
+    $movies = Movie::paginate(20);
+    // keywordを空文字で渡し、初期化する
+    $keyword = '';
+    // showingは規定でallが最初に設定されてる
+    $showing = 'all';
     // return response()->json($movies);
-    return view('movies.movie', ['movies' => $movies]);
+    // return view('movies.movie', ['movies' => $movies]);
+//    return view('movies.movie', compact('movies', 'keyword', 'showing'));
+    return view('movies.movie', compact('movies', 'keyword', 'showing'));
   }
 
   // 08 moviesの新規登録画面
@@ -73,6 +82,7 @@ class MovieController extends Controller
     // return back()->with('message', '保存しました');
     // 映画一覧にリダイレクトする
     return redirect()->route('movies.movie')->with('message', '登録しました');
+//    return redirect()->route('movies.index')->with('message', '登録しました');
   }
 
   // 09 個別データの表示処理
@@ -116,6 +126,7 @@ class MovieController extends Controller
     $movie->update($validated);
 
     return redirect()->route('movies.movie')->with('message', '更新しました');
+    // return redirect()->route('movies.index')->with('message', '更新しました');
   }
 
   // 10 削除機能
@@ -123,5 +134,53 @@ class MovieController extends Controller
     $movie = Movie::findOrFail($id);
     $movie->delete();
     return redirect()->route('movies.movie')->with('message', '削除しました');
+  }
+
+  // 11 検索機能
+//  public function searchMovie(Request $request) {
+    public function indexMovie(Request $request) {
+
+    // 検索ボックスに入力された値を受取、keywordに格納する
+    $keyword = $request->input('keyword',''); // 空文字で初期化
+    $isShowing = $request->input('is_showing','all');
+    // laravelのデバック
+    // dd($showing);
+
+    // クエリ準備
+    $movies = Movie::query();
+
+    // keywordがあればif文で取得データを絞り込み
+    if ($keyword) {
+      $movies->where(function($query) use ($keyword){
+        // シングルクォートで囲むと文字列として扱う、変数の場合は
+        $query->where('title', 'like', "%{$keyword}%")
+          ->orWhere('description', 'like', "%{$keyword}%");
+      });
+      // $movies->where('title', 'like', '%' . $keyword . '%')
+      // ->orWhere('description', 'like', '%' . $keyword . '%');
+    }
+    // is_showingがあればif文で場合分け
+    // valueの内容によって取得データの絞り込みを変える
+    // 一個前のif文の最後とANDで結合される
+    if ($isShowing === '1') {
+      // is_showingが1のものだけを取得
+      $movies->where('is_showing', 1);
+    }elseif ($isShowing === '0') {
+      // is_showingが0のものだけを取得
+      $movies->where('is_showing', 0);
+    }else{
+      // その他の場合はフィルタしない
+
+    }
+
+    // 検索結果を取得（クエリ実行）
+    // $movies = $movies->get();
+    // ページネーションした検索結果を取得する(paginateはgetだとLaravelは知ってる)
+    // サイト内検索後にページ送りをクリックしても検索内容が引き継がれるようappends()を加える
+    $movies = $movies->paginate(20)->appends(['keyword' => $keyword, 'is_showing' => $isShowing]);
+    // $movies = $movies->paginate(2);
+
+    // viewファイルへ、一覧表示データとkeywordを返す
+    return view('movies.movie', compact('movies', 'keyword', 'isShowing'));
   }
 }

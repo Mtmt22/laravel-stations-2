@@ -21,12 +21,21 @@ Route::get('/', function () {
 });
 
 
+// 11 getMovieとsearchMovieを統合
+Route::get('/movies', [MovieController::class, 'indexMovie'])->name('movies.index');
+
+
 // 06 「GET /movies」で映画一覧のページをHTMLで返す
-Route::get('/movies', [MovieController::class, 'getMovie']);
+// Route::get('/movies', [MovieController::class, 'getMovie']);
 
 
 // 07 「GET admin/movies」で現在登録されているmoviesの内容を全て出力する
-Route::get('admin/movies', [MovieController::class, 'getMovie'])->name('movies.movie');
+// Route::get('admin/movies', [MovieController::class, 'getMovie'])->name('movies.movie');
+Route::get('admin/movies', [MovieController::class, 'indexMovie'])->name('movies.movie');
+
+
+// 11 検索機能の追加
+// Route::get('/admin/movies/search', [MovieController::class, 'searchMovie'])->name('movies.search');
 
 
 // 08 映画作品リストへの登録画面の作成
@@ -37,8 +46,10 @@ Route::post('/admin/movies/store', [MovieController::class, 'postMovieCreate'])-
 
 
 // 09 映画作品リストの編集画面の作成
-// 個別データの表示
-Route::get('/admin/movies/{id}', [MovieController::class, 'showMovie'])->name('movies.show');
+// 個別データの表示、idが他のルートの際に間違えて読み込まれ404になるため数字の制約つけた
+Route::get('/admin/movies/{id}', [MovieController::class, 'showMovie'])->name('movies.show')
+->where('id','[0-9]+');
+
 // 編集画面
 Route::get('/admin/movies/{id}/edit', [MovieController::class, 'editMovie'])->name('movies.edit');
 // 更新処理
@@ -52,9 +63,11 @@ Route::delete('/admin/movies/{id}/destroy', [MovieController::class, 'deleteMovi
 
 
 
+
+
+
 // 04 データベースの取得
 Route::get('/getPractice', [PracticeController::class, 'getPractice']);
-
 
 // 02 RouteとControllerをどちらも使ってみよう
 // Route::get('URL', [Controllerの名前::class, 'Controller内のfunction名']);
