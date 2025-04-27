@@ -20,6 +20,12 @@ return new class extends Migration
             $table->boolean('is_showing')->default(false)->comment('上映中かどうか');
             $table->text('description')->comment('概要');
             $table->timestamps();
+            // 親 genres(id) を参照する外部キー
+            $table->foreignId('genre_id') // UNSIGNED BIGINT 型で作成される
+                  ->constrained() // genres テーブルの id を参照する
+                  ->cascadeOnDelete() // 親が消えたら子も自動で削除
+                  ->comment('ジャンルID');
+            // $table->unsignedBigInteger('genres_id')->comment("ジャンルID");
         });
     }
 

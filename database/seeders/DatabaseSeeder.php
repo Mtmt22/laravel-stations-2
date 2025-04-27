@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Genre;
 use App\Models\Movie;
 use App\Practice;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,8 @@ class DatabaseSeeder extends Seeder
         // 以下のコマンドでSeedの実行が可能
         // $ docker compose exec php-container php artisan db:seed
 
+        Genre::factory(5)->create();
         Movie::factory(10)->create();
+
     }
 }

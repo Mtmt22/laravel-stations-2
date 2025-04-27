@@ -18,8 +18,13 @@
   <form method="post" action="{{ route('movies.store') }}">
     @csrf
     <div>
-      <label for="title">タイトル：</label>
+      <label for="title">タイトル ： </label>
       <input type="text" id="title" name="title">
+    </div>
+
+    <div>
+      <label for="genre">ジャンル : </label>
+      <input type="text" id="genre" name="genre">
     </div>
 
     <div><!-- 画像URLを取得 -->

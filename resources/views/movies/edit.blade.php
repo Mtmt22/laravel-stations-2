@@ -24,6 +24,12 @@
     </div>
 
     <div>
+      <label for="genre">ジャンル : </label>
+      <input type="text" id="genre" name="genre"
+      value="{{ old('genres_id', $movie->genre->name) }}" />
+    </div>
+
+    <div>
       <label for="image_url">画像 ： </label>
       <input type="text" id="image_url" name="image_url"
       value="{{ old('image_url', $movie->image_url) }}"/>

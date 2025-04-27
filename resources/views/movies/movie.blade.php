@@ -36,6 +36,7 @@
       <thead>
         <tr>
           <th>タイトル</th>
+          <th>ジャンル</th>
           <th>画像</th>
           <th>公開年</th>
           <th>上映中かどうか</th>
@@ -47,6 +48,7 @@
         @foreach ($movies as $movie)
           <tr>
               <td>{{ $movie->title }}</td>
+              <td>{{ optional($movie->genre)->name ?? '未設定' }}</td>
               <td>{{ $movie->image_url }}</td>
               <td>{{ $movie->published_year }}</td>
               <td>{{ $movie->is_showing ? '上映中' : '上映予定' }}</td>
@@ -63,7 +65,8 @@
                   @csrf
                   @method('delete')
                   <!-- 削除前に確認のダイアログ表示する -->
-                  <button type="submit" onclick="window.confirm('削除しますか?')">削除</button>
+                  <!-- 確認ダイアログの結果をボタンに反映させるためにreturnが必要 -->
+                  <button type="submit" onclick="return window.confirm('削除しますか?')">削除</button>
                 </form>
               </td>
           </tr>

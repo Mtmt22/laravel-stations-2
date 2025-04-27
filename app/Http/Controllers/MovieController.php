@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Genre;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Log;
 
@@ -33,6 +34,7 @@ class MovieController extends Controller
   public function postMovieCreate(Request $request) {
     // <input name="title'...> で指定された内容を取得する
     $title = $request->input('title');
+    $genre = $request->input('genre');
     $image_url = $request->input('image_url');
     $published_year = $request->input('published_year');
     $is_showing = $request->boolean('is_showing');
@@ -44,6 +46,7 @@ class MovieController extends Controller
     $validated = $request->validate([
       // 入力必須,titleは重複禁止,ただし自身の編集の場合はスルー
       'title' => 'required|unique:movies,title',
+      'genre' => 'required',
       // 実際に存在するかを調べるには active_url を使う
       'image_url' => 'required|url',
       'published_year' => 'required',
@@ -51,6 +54,7 @@ class MovieController extends Controller
       'is_showing' => 'required|boolean'
     ],[
       'title.required' => 'タイトルは必須です',
+      'genre.required' => 'ジャンルは必須です',
       'title.unique' => 'タイトルはすでに存在します',
       'image_url.required' => '画像URLは必須です',
       'image_url.active_url' => '画像URLは正しい形式ではありません',
@@ -60,6 +64,7 @@ class MovieController extends Controller
 
     // 精査済みのデータを利用する
     $title = $validated['title'];
+    $genre = $validated['genre'];
     $description = $validated['description'];
     $image_url = $validated['image_url'];
     $published_year = $validated['published_year'];
@@ -69,6 +74,7 @@ class MovieController extends Controller
     $movie = new Movie();
     // title と description をセット
     $movie->title = $title;
+    $genre->genre = $genre;
     $movie->description = $description;
     $movie->image_url = $image_url;
     $movie->published_year = $published_year;
@@ -77,6 +83,7 @@ class MovieController extends Controller
     // データベースに保存
     // LaravelのEloquentモデルのメソッド
     $movie->save();
+    $genre->save();
 
     // 保存後にリダイレクトする（例：新規映画登録ページへ）
     // return back()->with('message', '保存しました');
@@ -108,6 +115,7 @@ class MovieController extends Controller
     $validated = $request->validate([
       // 入力必須,titleは重複禁止,ただし自分自身のデータならOK（idを指定）
       'title' => 'required|unique:movies,title,' . $movie->id . ',id',
+      'genre' => 'required',
       // 実際に存在するかを調べるには active_url を使う
       'image_url' => 'required|url',
       'published_year' => 'required',
@@ -115,6 +123,7 @@ class MovieController extends Controller
       'is_showing' => 'required|boolean'
     ],[
       'title.required' => 'タイトルは必須です',
+      'genre.required' => 'ジャンルは必須です',
       'title.unique' => 'タイトルはすでに存在します',
       'image_url.required' => '画像URLは必須です',
       'image_url.active_url' => '画像URLは正しい形式ではありません',
@@ -144,10 +153,10 @@ class MovieController extends Controller
     $keyword = $request->input('keyword',''); // 空文字で初期化
     $isShowing = $request->input('is_showing','all');
     // laravelのデバック
-    // dd($showing);
+    // dd($isShowing);
 
     // クエリ準備
-    $movies = Movie::query();
+    $movies = Movie::query()->with('genre');
 
     // keywordがあればif文で取得データを絞り込み
     if ($keyword) {
@@ -172,7 +181,7 @@ class MovieController extends Controller
       // その他の場合はフィルタしない
 
     }
-
+    // dd($movies->get());
     // 検索結果を取得（クエリ実行）
     // $movies = $movies->get();
     // ページネーションした検索結果を取得する(paginateはgetだとLaravelは知ってる)
