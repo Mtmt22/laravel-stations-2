@@ -8,31 +8,35 @@
 </head>
 <body>
   <div>
-    <!-- getのときは@csrfは不要 -->
-    <!-- 検索機能 -->
+    {{-- getのときはcsrfは不要 --}}
+    {{-- 検索機能 --}}
     <form action="{{ route('movies.index') }}" method="GET" >
       <input type="text" name="keyword" value="{{ $keyword ?? ''}}" >
       <input type="submit" value="検索" />
       <fieldset role="radiogroup">
         <div>
-          <input type="radio" id="all" name="is_showing" value="all" checked />
+          {{-- 条件 ? 条件が真なら出す値 : 偽なら出す値 --}}
+          <input type="radio" id="all" name="is_showing" value="all"
+          {{ old('is_showing', $isShowing) === 'all' ? 'checked' : '' }}/>
           <label for="all">すべて</label>
         </div>
 
         <div>
-          <input type="radio" id="playing" name="is_showing" value="1" />
+          <input type="radio" id="playing" name="is_showing" value="1"
+          {{ old('is_showing', $isShowing) === '1' ? 'checked' : '' }}/>
           <label for="playing">上映中</label>
         </div>
 
         <div>
-          <input type="radio" id="scheduled" name="is_showing" value="0" />
+          <input type="radio" id="scheduled" name="is_showing" value="0"
+          {{ old('is_showing', $isShowing) === '0' ? 'checked' : '' }}/>
           <label for="scheduled">上映予定</label>
         </div>
       </fieldset>
     </form>
 
     <table border="1">
-      <!-- カラム名 -->
+      {{-- カラム名 --}}
       <thead>
         <tr>
           <th>タイトル</th>
@@ -53,19 +57,19 @@
               <td>{{ $movie->published_year }}</td>
               <td>{{ $movie->is_showing ? '上映中' : '上映予定' }}</td>
               <td>{{ $movie->description }}</td>
-              <!-- 編集画面へのリンク -->
+              {{-- 編集画面へのリンク --}}
               <td>
                 <a href="{{ route('movies.edit', $movie) }}">
                   <button>編集</button>
                 </a>
               </td>
-              <!-- 削除フォーム -->
+              {{-- 削除フォーム --}}
               <td>
                 <form method="post" action="{{ route('movies.delete', $movie) }}" >
                   @csrf
                   @method('delete')
-                  <!-- 削除前に確認のダイアログ表示する -->
-                  <!-- 確認ダイアログの結果をボタンに反映させるためにreturnが必要 -->
+                  {{-- 削除前に確認のダイアログ表示する --}}
+                  {{-- 確認ダイアログの結果をボタンに反映させるためにreturnが必要 --}}
                   <button type="submit" onclick="return window.confirm('削除しますか?')">削除</button>
                 </form>
               </td>
@@ -76,10 +80,10 @@
     </table>
 
   </div>
-  <!-- ページネーションでページの選択が出来るようにする -->
+  {{-- ページネーションでページの選択が出来るようにする --}}
   {{ $movies->links() }}
 
-  <!-- メッセージの表示 -->
+  {{-- メッセージの表示 --}}
   @if (session('message'))
     <p style="color: green;">{{ session('message') }}</p>
   @endif

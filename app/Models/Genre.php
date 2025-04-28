@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Genre extends Model
 {
   use HasFactory;
-  protected $fillable = ['genre'];
+  protected $fillable = ['name'];
 
   public function movies() {
     return $this->hasMany(Movie::class);

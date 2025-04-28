@@ -18,9 +18,6 @@ class MovieController extends Controller
     $keyword = '';
     // showingは規定でallが最初に設定されてる
     $showing = 'all';
-    // return response()->json($movies);
-    // return view('movies.movie', ['movies' => $movies]);
-//    return view('movies.movie', compact('movies', 'keyword', 'showing'));
     return view('movies.movie', compact('movies', 'keyword', 'showing'));
   }
 
@@ -95,7 +92,6 @@ class MovieController extends Controller
   // 09 個別データの表示処理
   public function showMovie($id) {
     // id を利用して、Movie モデルインスタンスを取得
-    $movie = Movie::find($id);
     // 存在しない場合に404を返す
     $movie = Movie::findOrfail($id);
     // 取得したデータをビューに渡す
