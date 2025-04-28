@@ -7,6 +7,7 @@ use App\Models\Movie;
 use App\Models\Genre;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
@@ -29,26 +30,18 @@ class MovieController extends Controller
 
   // 08 moviesの新規登録の受取
   public function postMovieCreate(Request $request) {
-    // <input name="title'...> で指定された内容を取得する
-    $title = $request->input('title');
-    $genre = $request->input('genre');
-    $image_url = $request->input('image_url');
-    $published_year = $request->input('published_year');
-    $is_showing = $request->boolean('is_showing');
-    $description = $request->input('description');
 
-
-    // 入力内容を検証（バリデーション）する → 空だった場合にエラー
-    // バリデーションを実行して、通過したデータのみを取り出すメソッド
+    // 入力内容を検証（バリデーション）する → 空ならエラー
+    // 成功したデータだけを validated 配列に格納
+    // input() で個別に取得しなくて良い。先に変数に入れず、ミスがあった時点で止めたい。
     $validated = $request->validate([
-      // 入力必須,titleは重複禁止,ただし自身の編集の場合はスルー
+      // create.blade からの入力データの name= に対応している
       'title' => 'required|unique:movies,title',
       'genre' => 'required',
-      // 実際に存在するかを調べるには active_url を使う
       'image_url' => 'required|url',
       'published_year' => 'required',
+      'is_showing' => 'required|boolean',
       'description' => 'required',
-      'is_showing' => 'required|boolean'
     ],[
       'title.required' => 'タイトルは必須です',
       'genre.required' => 'ジャンルは必須です',
@@ -59,28 +52,29 @@ class MovieController extends Controller
       'description.required' => '概要は必須です',
     ]);
 
-    // 精査済みのデータを利用する
-    $title = $validated['title'];
-    $genre = $validated['genre'];
-    $description = $validated['description'];
-    $image_url = $validated['image_url'];
-    $published_year = $validated['published_year'];
-    $is_showing = $validated['is_showing'];
+    // DBトランザクションを開始
+    // useで DB を使えるようにしておく
+    DB::transaction(function () use ($validated) {
 
-    // 新しい Diary モデルインスタンスを作成
-    $movie = new Movie();
-    // title と description をセット
-    $movie->title = $title;
-    $genre->genre = $genre;
-    $movie->description = $description;
-    $movie->image_url = $image_url;
-    $movie->published_year = $published_year;
-    $movie->is_showing = $is_showing;
+      // genres テーブルにある name に存在しない場合、新規に登録する
+      // Genreモデルのインスタンス（設計図から作ったもの）を受け取っている
+      // モデルは「データベースのテーブル1つ」をプログラム上で扱うためのクラス
+      $genre = Genre::firstOrCreate(['name' => $validated['genre']]);
 
-    // データベースに保存
-    // LaravelのEloquentモデルのメソッド
-    $movie->save();
-    $genre->save();
+      // Movie を作成して genre に連携させる
+      // create()が new Movie() + save() を同時にしてくれる
+      // インスタンスの作成、1つずつの絡む登録、保存を同時に
+      Movie::create([
+        'title' => $validated['title'],
+        'genre_id' => $genre->id,
+        'image_url' => $validated['image_url'],
+        'published_year' => $validated['published_year'],
+        'is_showing' => $validated['is_showing'],
+        'description' => $validated['description'],
+      ]);
+
+    });
+
 
     // 保存後にリダイレクトする（例：新規映画登録ページへ）
     // return back()->with('message', '保存しました');

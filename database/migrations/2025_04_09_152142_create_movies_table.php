@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id()->comment('ID');
-            $table->string('title')->comment('映画タイトル');
+            // バリデーション（入口チェック）を通過しても登録では1つしかダメ（絶対に重複禁止）
+            $table->string('title')->unique()->comment('映画タイトル');
             $table->text('image_url')->comment('画像URL');
             $table->integer('published_year')->comment('公開年');
             // int, tinyintは使えない Laravelドキュメント参照
@@ -25,7 +26,6 @@ return new class extends Migration
                   ->constrained() // genres テーブルの id を参照する
                   ->cascadeOnDelete() // 親が消えたら子も自動で削除
                   ->comment('ジャンルID');
-            // $table->unsignedBigInteger('genres_id')->comment("ジャンルID");
         });
     }
 
