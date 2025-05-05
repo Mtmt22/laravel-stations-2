@@ -35,7 +35,7 @@
       </fieldset>
     </form>
 
-    <table border="1">
+    <table>
       {{-- カラム名 --}}
       <thead>
         <tr>
@@ -91,11 +91,22 @@
 
 <style>
 table {
-  margin-top : 10px;
-  border-collapse:collapse;
-}td {
-  padding : 5px;
+    margin-top : 10px;
+    /* セル（<td>）ごとに２重線を１本にまとめる */
+    border-collapse:collapse;
+  }td {
+    padding : 5px;
+  }table, th, td {
+    /* 枠線を入れる */
+    border: 1px solid #000000;
+  }td, th {
+    /* 表の余白を入れてセルを見やすくさせる */
+    padding: 8px 12px;
+  }th {
+  background-color: #b6b6b6;
+  }tr:nth-child(even) {
+    /* 偶数行に背景をつける */
+    background-color: #eeeeee;
 }
-</style>
 
 </html>

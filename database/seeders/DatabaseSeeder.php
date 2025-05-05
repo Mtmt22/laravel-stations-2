@@ -16,16 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call([
-        //     // ここに Seeder を追加する
-        // ]);
         // 05 Practiceのテストデータを10個作るSeedファイル
         // Practice::factory(10)->create();
-        // 以下のコマンドでSeedの実行が可能
-        // $ docker compose exec php-container php artisan db:seed
 
         Genre::factory(5)->create();
         Movie::factory(10)->create();
 
+        $this->call([
+          SheetsTableSeeder::class,
+        ]);
     }
 }

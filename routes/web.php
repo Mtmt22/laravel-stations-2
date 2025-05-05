@@ -4,6 +4,7 @@ use Database\Factories\PracticeFactory;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PracticeController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SheetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\MovieController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// 13 座席一覧表示
+Route::get('/sheets', [SheetController::class, 'indexSheet'])->name('sheets.index');
 
 
 // 11 getMovieとsearchMovieを統合
