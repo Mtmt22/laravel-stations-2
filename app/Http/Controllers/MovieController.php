@@ -79,9 +79,11 @@ class MovieController extends Controller
     // 保存後にリダイレクトする（例：新規映画登録ページへ）
     // return back()->with('message', '保存しました');
     // 映画一覧にリダイレクトする
-    return redirect()->route('movies.movie')->with('message', '登録しました');
-//    return redirect()->route('movies.index')->with('message', '登録しました');
+    return redirect()
+        ->route('movies.movie')
+        ->with('message', '登録しました');
   }
+
 
   // 09 個別データの表示処理
   public function showMovie($id) {
@@ -124,7 +126,9 @@ class MovieController extends Controller
     // チェック済みの値を用いて更新
     $movie->update($validated);
 
-    return redirect()->route('movies.movie')->with('message', '更新しました');
+    return redirect()
+        ->route('movies.movie')
+        ->with('message', '更新しました');
     // return redirect()->route('movies.index')->with('message', '更新しました');
   }
 
@@ -132,7 +136,9 @@ class MovieController extends Controller
   public function deleteMovie(Request $request ,$id) {
     $movie = Movie::findOrFail($id);
     $movie->delete();
-    return redirect()->route('movies.movie')->with('message', '削除しました');
+    return redirect()
+        ->route('movies.movie')
+        ->with('message', '削除しました');
   }
 
   // 11 検索機能
@@ -176,10 +182,29 @@ class MovieController extends Controller
     // $movies = $movies->get();
     // ページネーションした検索結果を取得する(paginateはgetだとLaravelは知ってる)
     // サイト内検索後にページ送りをクリックしても検索内容が引き継がれるようappends()を加える
-    $movies = $movies->paginate(20)->appends(['keyword' => $keyword, 'is_showing' => $isShowing]);
+    $movies = $movies
+        ->paginate(20)
+        ->appends(['keyword' => $keyword, 'is_showing' => $isShowing]);
     // $movies = $movies->paginate(2);
 
     // viewファイルへ、一覧表示データとkeywordを返す
     return view('movies.movie', compact('movies', 'keyword', 'isShowing'));
   }
+
+  // 14 映画詳細ページ（リレーションを使わない）
+  public function show($id) {
+
+    // 映画の一覧を取得
+    $movie = Movie::findOrFail($id);
+
+    // 作品番号を持って、scheduleを確認する
+    // Schedule::where()でも良い
+    $schedules = DB::table('schedules')
+        ->where('movie_id', $movie->id)
+        ->orderBy('start_time')
+        ->get();
+
+    return view('movies.shows', compact('movie', 'schedules'));
+  }
+
 }

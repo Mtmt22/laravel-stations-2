@@ -16,9 +16,9 @@ class ScheduleFactory extends Factory
     public function definition()
     {
         return [
-            'movie_id' => Movie::factory(),
-            'start_time' => CarbonImmutable::now(),
-            'end_time' => CarbonImmutable::now()->addHours(2),
+
+          'start_time' => $this->faker->dateTime(),
+          'end_time' => $this->faker->dateTime(),
         ];
     }
 }

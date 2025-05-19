@@ -21,6 +21,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 14 映画詳細ページ作成
+Route::get('/movies/{id}', [MovieController::class, 'show'])
+    ->where('id','[0-9]+')->name('show');
+
+
 // 13 座席一覧表示
 Route::get('/sheets', [SheetController::class, 'indexSheet'])->name('sheets.index');
 
